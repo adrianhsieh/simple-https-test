@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="simple-https-test">
+    <global-element type="org.mule.tooling.ui.modules.core.global.httpsConnector" name="HTTP\HTTPS" entity-id="HTTP\HTTPS#1">
+        <properties>
+            <property name="proxyUsername"/>
+            <property name="reuseAddress"/>
+            <property value="0" name="receiveBacklog"/>
+            <property name="enableCookies"/>
+            <property value="10000" name="serverSoTimeout"/>
+            <property value="0" name="socketSoLinger"/>
+            <property value="http://www.mulesoft.org/schema/mule/https/connector" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+            <property value="10000" name="clientSoTimeout"/>
+            <property value="true" name="validateConnections"/>
+            <property name="keepAlive"/>
+            <property name="sendTcpNoDelay"/>
+            <property name="label"/>
+            <property name="proxyPort"/>
+            <property name="cookieSpec"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="proxyHostname"/>
+            <property value="0" name="receiveBufferSize"/>
+            <property value="https-connector" name="name"/>
+            <property name="keepSendSocketOpen"/>
+            <property name="dynamicNotification"/>
+            <property value="0" name="sendBufferSize"/>
+            <property name="ENABLE_MODE_SWITCH"/>
+            <property name="proxyPassword"/>
+            <property value="2" name="auxiliary;index"/>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/https/tls-key-store;0">
+                <property value="keystore" name="path"/>
+                <property value="MuleSoft1" name="storePassword"/>
+                <property value="MuleSoft1" name="keyPassword"/>
+                <property value="3" name="auxiliary;index"/>
+                <property value="3" name="auxiliary;wrapIn"/>
+            </property-collection>
+            <property-collection name="@http://www.mulesoft.org/schema/mule/https/tls-key-store;0">
+                <property value="keystore" name="path"/>
+                <property value="MuleSoft1" name="storePassword"/>
+                <property value="MuleSoft1" name="keyPassword"/>
+                <property value="3" name="auxiliary;index"/>
+                <property value="3" name="auxiliary;wrapIn"/>
+            </property-collection>
+        </properties>
+    </global-element>
+    <global-element type="http://www.springframework.org/schema/context/property-placeholder" name="Property Placeholder" entity-id="!!!21ac8678-18b1-4772-a355-8d8613efa6a0">
+        <properties>
+            <property value="tenant.properties" name="location"/>
+        </properties>
+        <description></description>
+    </global-element>
+    <flow SubFlow="false" name="simple-https-testFlow1" entity-id="814b8696-3e33-4592-a676-1dab084df410">
+        <properties>
+            <property name="processingStrategy"/>
+            <property name="processingStrategy2"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+            <property value="4" name="auxiliary;index"/>
+        </properties>
+        <lane isChoiceOtherwiseLane="false" index="0" hadOnlyOneElement="false" entity-id="compartment-lane#1">
+            <graphicalData height="0" width="0" y="0" x="0"/>
+            <endpoint message-exchange-pattern="RequestResponse" direction="Inbound" type="http://www.mulesoft.org/schema/mule/http/endpoint" name="HTTPS" entity-id="HTTP#1">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="8082" name="port"/>
+                    <property name="contentType"/>
+                    <property name="password"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property value="request-response" name="exchange-pattern"/>
+                    <property name="encoding"/>
+                    <property value="simplejsonp" name="path"/>
+                    <property name="responseTransformer-refs"/>
+                    <property value="5" name="auxiliary;index"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property value="https-connector" name="connector-ref-outbound"/>
+                    <property value="localhost" name="host"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="followRedirects"/>
+                    <property value="http://www.mulesoft.org/schema/mule/https/endpoint" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property name="keep-alive"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="ref"/>
+                    <property name="httpLabel"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="method"/>
+                    <property name="user"/>
+                    <property value="https-connector" name="connector-ref"/>
+                </properties>
+            </endpoint>
+            <pattern type="http://www.mulesoft.org/schema/mule/core/session-variable-transformer" name="jsonpcallback" entity-id="Session Variable#1">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="jsonpcallback" name="variableName"/>
+                    <property value="#[header:inbound:callback]" name="value"/>
+                    <property value="http://www.mulesoft.org/schema/mule/core/set-session-variable" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property value="6" name="auxiliary;index"/>
+                </properties>
+            </pattern>
+            <pattern type="http://www.mulesoft.org/schema/mule/core/variable-transformer" name="tenantid" entity-id="Variable#1">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property value="tenantid" name="variableName"/>
+                    <property value="${tenantId}" name="value"/>
+                    <property value="http://www.mulesoft.org/schema/mule/core/set-variable" name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute"/>
+                    <property value="7" name="auxiliary;index"/>
+                </properties>
+            </pattern>
+            <pattern type="http://www.mulesoft.org/schema/mule/scripting/groovyTransformer" name="json-map" entity-id="Groovy#1">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property name="returnClass"/>
+                    <property name="ignoreBadInput"/>
+                    <property name="encoding"/>
+                    <property name="mimeType"/>
+                    <property value="8" name="auxiliary;index"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script;0">
+                        <property value="def jsonmap=[status:'200',message:'OK',tenantid:message.getInvocationProperty('tenantid')];&#xA;&#xA;return jsonmap;" name="text"/>
+                        <property value="Groovy" name="engine"/>
+                        <property value="9" name="auxiliary;index"/>
+                        <property value="9" name="auxiliary;wrapIn"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script-for-properties;0">
+                        <property value="def jsonmap=[status:'200',message:'OK',tenantid:message.getInvocationProperty('tenantid')];&#xA;&#xA;return jsonmap;" name="text"/>
+                        <property value="Groovy" name="engine"/>
+                        <property value="9" name="auxiliary;index"/>
+                        <property value="9" name="auxiliary;wrapIn"/>
+                    </property-collection>
+                </properties>
+            </pattern>
+            <pattern type="http://www.mulesoft.org/schema/mule/json/object-to-json-transformer" name="Object to JSON" entity-id="Object to JSON#1">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property name="sourceClass"/>
+                    <property name="returnClass"/>
+                    <property name="ignoreBadInput"/>
+                    <property name="encoding"/>
+                    <property name="mapper-ref"/>
+                    <property name="mimeType"/>
+                    <property value="10" name="auxiliary;index"/>
+                </properties>
+            </pattern>
+            <pattern type="http://www.mulesoft.org/schema/mule/scripting/groovyTransformer" name="json-to-jsonp" entity-id="Groovy#2">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property name="returnClass"/>
+                    <property name="ignoreBadInput"/>
+                    <property name="encoding"/>
+                    <property name="mimeType"/>
+                    <property value="11" name="auxiliary;index"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script;0">
+                        <property value="def jsonp = message.getSessionProperty('jsonpcallback') + '(' + payload + ')';&#xA;&#xA;return jsonp;" name="text"/>
+                        <property value="Groovy" name="engine"/>
+                        <property value="12" name="auxiliary;index"/>
+                        <property value="12" name="auxiliary;wrapIn"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/scripting/script-for-properties;0">
+                        <property value="def jsonp = message.getSessionProperty('jsonpcallback') + '(' + payload + ')';&#xA;&#xA;return jsonp;" name="text"/>
+                        <property value="Groovy" name="engine"/>
+                        <property value="12" name="auxiliary;index"/>
+                        <property value="12" name="auxiliary;wrapIn"/>
+                    </property-collection>
+                </properties>
+            </pattern>
+            <pattern type="http://www.mulesoft.org/schema/mule/http/response-builder" name="HTTP Response Builder" entity-id="HTTP Response Builder#1">
+                <graphicalData height="0" width="0" y="0" x="0"/>
+                <properties>
+                    <property name="cookiesLabel"/>
+                    <property name="status"/>
+                    <property value="application/javascript" name="contentType"/>
+                    <property value="13" name="auxiliary;index"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/http/header;0">
+                        <property value="Access-Control-Allow-Origin" name="name"/>
+                        <property value="#[string:*]" name="value"/>
+                        <property value="14" name="auxiliary;index"/>
+                        <property value="14" name="auxiliary;wrapIn"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/http/header;1">
+                        <property value="Access-Control-Allow-Credentials" name="name"/>
+                        <property value="#[string:true]" name="value"/>
+                        <property value="15" name="auxiliary;index"/>
+                        <property value="15" name="auxiliary;wrapIn"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/http/header;2">
+                        <property value="Access-Control-Allow-Methods" name="name"/>
+                        <property value="#[string:GET, POST, OPTIONS]" name="value"/>
+                        <property value="16" name="auxiliary;index"/>
+                        <property value="16" name="auxiliary;wrapIn"/>
+                    </property-collection>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/http/header;3">
+                        <property value="Access-Control-Allow-Headers" name="name"/>
+                        <property value="#[string:DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type]" name="value"/>
+                        <property value="17" name="auxiliary;index"/>
+                        <property value="17" name="auxiliary;wrapIn"/>
+                    </property-collection>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <description></description>
+</mule-configuration>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:context="http://www.springframework.org/schema/context" xmlns:json="http://www.mulesoft.org/schema/mule/json"
+	xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:https="http://www.mulesoft.org/schema/mule/https" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/https/current/mule-https.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+    <https:connector name="https-connector" validateConnections="true" sendBufferSize="0" receiveBufferSize="0" receiveBacklog="0" clientSoTimeout="10000" serverSoTimeout="10000" socketSoLinger="0" doc:name="HTTP\HTTPS">
+        <https:tls-key-store path="keystore" keyPassword="MuleSoft1" storePassword="MuleSoft1"/>
+    </https:connector>
+    <context:property-placeholder location="tenant.properties"/>
+    <flow name="simple-https-testFlow1" doc:name="simple-https-testFlow1">
+        <https:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8082" path="simplejsonp" connector-ref="https-connector" doc:name="HTTPS"/>
+        <set-session-variable variableName="jsonpcallback" value="#[header:inbound:callback]" doc:name="jsonpcallback"/>
+        <set-variable variableName="tenantid" value="${tenantId}" doc:name="tenantid"/>
+        <scripting:transformer doc:name="json-map">
+            <scripting:script engine="Groovy"><![CDATA[def jsonmap=[status:'200',message:'OK',tenantid:message.getInvocationProperty('tenantid')];
+
+return jsonmap;]]></scripting:script>
+        </scripting:transformer>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+        <scripting:transformer doc:name="json-to-jsonp">
+            <scripting:script engine="Groovy"><![CDATA[def jsonp = message.getSessionProperty('jsonpcallback') + '(' + payload + ')';
+
+return jsonp;]]></scripting:script>
+        </scripting:transformer>
+        <http:response-builder contentType="application/javascript" doc:name="HTTP Response Builder">
+	        <http:header name="Access-Control-Allow-Origin" value="#[string:*]"/>
+	        <http:header name="Access-Control-Allow-Credentials" value="#[string:true]"/>
+	        <http:header name="Access-Control-Allow-Methods" value="#[string:GET, POST, OPTIONS]"/>
+	        <http:header name="Access-Control-Allow-Headers" value="#[string:DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type]"/>
+        </http:response-builder>
+    </flow>
+</mule>
