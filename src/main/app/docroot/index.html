@@ -18,7 +18,11 @@
       document.getElementById("response").textContent = JSON.stringify(data);
     }
 
-    jsonp("https://54.235.41.146:8082/668074570/status?callback=jsonpCallback&message=Hello");
+    // This doesn't work
+    jsonp("https://simplejsonptest.cloudhub.io/abc123/simplejsonp?callback=jsonpCallback");
+    
+    // This works
+    //jsonp("https://simplejsonptest.cloudhub.io/simplejsonp?callback=jsonpCallback&tenantId=abc123");
   </script>
 </head>
 <body>
